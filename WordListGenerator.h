@@ -36,7 +36,7 @@ bool isText(char *name);
 void getAllTxt(char *directory);
 
 /*gets all the words in either a file or directory, and creates a linked list of them*/
-struct wordList *getAllWords(struct directoryList *dirHead);
+void getAllWords();
 
 
 void debugPrintWords();

@@ -98,6 +98,19 @@ void getAllTxt(char * directory)
 	closedir(file);
 }
 
+void getAllWords()
+{
+	
+	struct directoryList *iter=dirHead;
+	while (iter)
+	{
+		FILE *circuit = fopen(iter->dir,"r");
+		
+	}
+	
+}
+
+
 int main()
 {	
 
