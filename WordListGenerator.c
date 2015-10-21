@@ -109,15 +109,50 @@ void getAllWords()
 		char *token;
 		   while ((character = fgetc(textFile)) != EOF) 
 		   {
-			   if (!isalnum(character))
-				   continue;
-			   char *temp1=sprintf(str, "%d", aInt);;
+			   
+			   char poop=(char)character;
+			   printf("%c",poop);
+			   /*if (!isalnum(character))
+			   {
+				if (!token)
+				{
+					continue;
+				}
+				struct wordList *wordIter=wordHead;
+				if (!wordIter)
+				{
+					wordIter=malloc(sizeof(struct wordList));
+					wordIter->word=token;
+					wordHead=wordIter;
+				}
+				else
+				{
+					while (wordIter->next)
+						wordIter=wordIter->next;
+					
+					struct wordList *newWord=malloc(sizeof(struct wordList));
+					newWord->word=token;
+					wordIter->next=newWord;
+				}  
+				continue;
+			   }
+			   else
+			   {
+				
+				char inToChar=character+'0';
+				char toAppend[2]={inToChar, '\0'};
+				char *temp=malloc(sizeof(token)+sizeof(toAppend)+1);
+				strcpy(temp,token);
+				strcat(temp,toAppend);
+				free(token);
+				token=temp;
+			   }*/
 		   }
 		   
 
 		  fclose(textFile);
-
-    }
+		iter=iter->next;
+	}
   
 	
 	
@@ -128,7 +163,10 @@ int main()
 {	
 
 	getAllTxt("C:/Users/cal13/Dropbox");
+	
 	debugPrintFiles();
+	
+	getAllWords();
 	return 0;
 }
 
