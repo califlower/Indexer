@@ -21,7 +21,7 @@ void getAllFiles (const char * directory)
     {
         return;
     }
-    while (1) 
+    while (true) 
     {
         struct dirent * entry;
         const char * directoryName;
