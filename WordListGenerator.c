@@ -89,12 +89,13 @@ void getAllTxt(char * directory)
 						newDirectory->dir=dirFinal;
 						iter->next=newDirectory;
 					#else
-						while (iter)
+						while (iter->next!=NULL)
 							iter=iter->next;
 						
-						struct directoryList *newDirectory=malloc(sizeof(struct directoryList));
+						struct directoryList *newDirectory=(struct directoryList *)malloc(sizeof(struct directoryList));
 						newDirectory->dir=dirFinal;
-						iter=newDirectory;
+						newDirectory->next=NULL;
+						iter->next=newDirectory;
 					#endif
 				}
 		
@@ -171,7 +172,7 @@ void getAllWords()
 int main()
 {	
 
-	getAllTxt("/.autofs/ilab/ilab_users/cig24");
+	getAllTxt("C:/Users/cal13/dropbox");
 	
 	debugPrintFiles();
 	
