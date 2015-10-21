@@ -5,7 +5,7 @@
 #include <limits.h>
 #include <stdbool.h>
 
-bool has_txt_extension(char const *name)
+bool isText(char const *name)
 {
     size_t len = strlen(name);
     return len > 4 && strcmp(name + len - 4, ".txt") == 0;
@@ -32,7 +32,7 @@ void getAllFiles (const char * directory)
   
         directoryName = entry->d_name;
 	
-	if (has_txt_extension(directoryName)==true)
+	if (isText(directoryName)==true)
 	printf ("%s/%s\n", directory, directoryName);
   
         char path[PATH_MAX];   
