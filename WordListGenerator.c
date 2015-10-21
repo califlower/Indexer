@@ -6,6 +6,9 @@ bool isText(char *name)
     return len > 4 && strcmp(name + len - 4, ".txt") == 0;
 }
 
+
+/* prints all the locations of the text files */
+/* For debugging */
 void debugPrintFiles()
 {
 	struct directoryList *iter=dirHead;
@@ -19,74 +22,80 @@ void debugPrintFiles()
 }
 
 
+/*populates a linked list with all the locations of a text file in a directory
+this includes subfolders and whatnot */
+
 void getAllTxt(char * directory)
 {
-    DIR *file;
-    file = opendir (directory);
+	DIR *file;
+	file = opendir (directory);
 
-    /*If the directory is invalid simply return */
-    if (!file) 
+	/*If the directory is invalid simply return */
+	if (!file) 
         return;
-    while (true) 
-    {
-        struct dirent * entry;
-        char * directoryName;
 
-        entry = readdir (file);
-	
-        if (!entry)		
-            break;
-  
-        directoryName = entry->d_name;
-	
-	
 
-	
-        char path[PATH_MAX];   
-	
-	if (strcmp (directoryName, "..") != 0 && strcmp (directoryName, ".") != 0) 
+	while (true) 
 	{
-		char *sl="/";
-		char *dirPart1= malloc(strlen(sl)+strlen(directory)+1);
-		strcpy(dirPart1,directory);
-		strcat(dirPart1,sl);
-		
-		char *dirFinal = malloc(strlen(directoryName)+strlen(dirPart1)+1);
-		
-		
-		strcpy(dirFinal, dirPart1);
-		strcat(dirFinal, directoryName);
-		
-		/*if its a text file, throw it into the directory linked list */
-		if (isText(directoryName)==true)
-		{	
-			
-			struct directoryList *iter=dirHead;
-			if (!iter)
-			{
-				iter=malloc(sizeof(struct directoryList));
-				iter->dir=dirFinal;
-				dirHead=iter;
-			}
-			else
-			{
-				while (iter->next)
-					iter=iter->next;
-				struct directoryList *newDirectory=malloc(sizeof(struct directoryList));
-				newDirectory->dir=dirFinal;
-				iter->next=newDirectory;
-			}
-		
-		}
-		
-		getAllTxt(dirFinal);
-        }
+		struct dirent * entry;
+		char * directoryName;
+		entry = readdir (file);
 	
-    }
+	/*break the loop if it can't open the file */
+		if (!entry)		
+			break;
+  
+		directoryName = entry->d_name;
+	
+	
 
-    closedir(file);
-    
-    
+	
+		char path[PATH_MAX];   
+	
+		if (strcmp (directoryName, "..") != 0 && strcmp (directoryName, ".") != 0) 
+		{
+			
+			/* This block basically lumps a few strings together so that it can go into subdirectories. Probably not the best way to do things
+			/* but it works well and doesn't seem to cause any issues */
+			
+			char *sl="/";
+			char *dirPart1= malloc(strlen(sl)+strlen(directory)+1);
+			strcpy(dirPart1,directory);
+			strcat(dirPart1,sl);
+			
+			char *dirFinal = malloc(strlen(directoryName)+strlen(dirPart1)+1);
+			
+			strcpy(dirFinal, dirPart1);
+			strcat(dirFinal, directoryName);
+			
+			/*if its a text file, throw it into the directory linked list */
+			if (isText(directoryName)==true)
+			{	
+			
+				struct directoryList *iter=dirHead;
+				if (!iter)
+				{
+					iter=malloc(sizeof(struct directoryList));
+					iter->dir=dirFinal;
+					dirHead=iter;
+				}
+				else
+				{
+					while (iter->next)
+						iter=iter->next;
+					
+					struct directoryList *newDirectory=malloc(sizeof(struct directoryList));
+					newDirectory->dir=dirFinal;
+					iter->next=newDirectory;
+				}
+		
+			}
+			/*RECURSION*/
+			getAllTxt(dirFinal);
+		}
+	}
+
+	closedir(file);
 }
 
 int main()
