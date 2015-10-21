@@ -4,7 +4,7 @@
 #include <dirent.h>
 #include <limits.h>
 #include <stdbool.h>
-
+#include <ctype.h>
 /*
 A list of all the files that a word occurs in
 */

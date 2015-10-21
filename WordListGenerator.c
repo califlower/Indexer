@@ -104,9 +104,22 @@ void getAllWords()
 	struct directoryList *iter=dirHead;
 	while (iter)
 	{
-		FILE *circuit = fopen(iter->dir,"r");
-		
-	}
+		FILE *textFile = fopen(iter->dir,"r");
+		int character;
+		char *token;
+		   while ((character = fgetc(textFile)) != EOF) 
+		   {
+			   if (!isalnum(character))
+				   continue;
+			   char *temp1=sprintf(str, "%d", aInt);;
+		   }
+		   
+
+		  fclose(textFile);
+
+    }
+  
+	
 	
 }
 
