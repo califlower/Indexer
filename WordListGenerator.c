@@ -15,6 +15,7 @@ void debugPrintFiles()
 	struct node *temp = root;
 	while(temp!=NULL){
 		printf("%s\n", temp->token);
+		printf("%s\n", temp->file);
 		temp = temp->next;
 	}
 	
@@ -125,7 +126,6 @@ void getAllWords()
 
 		while(fscanf(file, "%*[^A-Za-z]"), fscanf(file, "%199[a-zA-Z]", string) > 0) 
 		{
-			printf("%s\n", string);
 		
         		struct node *newnode; // creates a new empty node
        			newnode  = (struct node*)malloc(sizeof(struct node));    // allocs memory to node         
@@ -147,12 +147,20 @@ void getAllWords()
         		*/
         		
        	 		if (root == NULL){ // if the root node is empty, point the root node to this pointer.
-        			root = newnode;
+        			root = newnode;		
+        			printf("This is the root:%s\n", root->token);	
+        			printf("This is the newnode:%s\n", newnode->token);	
+       	 			printf("This is the root:%s\n", root->file);	
+       	 			printf("This is the newnode:%s\n", newnode->file);	
        	 		}	
        	 			
        	 		else{
  				newnode->next=root; // if the link list is not empty, set whatever head point was pointing to previously equal to newnode-> next
         			root=newnode;
+        			printf("This is the root:%s\n", root->token);	
+        			printf("This is the newnode:%s\n", newnode->token);	
+       	 			printf("This is the root:%s\n", root->file);	
+       	 			printf("This is the newnode:%s\n", newnode->file);	
        	 		}
         		
 		}
@@ -167,9 +175,8 @@ int main()
 {	
 
 	getAllTxt("/Users/Saif/Desktop/testcases/comb");
-	
+	getAllWords();
 	debugPrintFiles();
 	
-	getAllWords();
 	return 0;
 }
