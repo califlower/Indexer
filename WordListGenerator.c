@@ -281,10 +281,10 @@ void getAllWords()
 	}
 }
 
-int main()
+int main(int argc, char** argv)
 {	
 
-	getAllTxt("C:/Users/cal13/dropbox");
+	getAllTxt(argv[1]);
 	getAllWords();
 	debugPrintFiles();
 	debugPrintWords();
