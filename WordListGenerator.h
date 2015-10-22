@@ -9,19 +9,29 @@
 A list of all the files that a word occurs in
 */
 
+
+
+struct occ
+{
+	char *file;
+	int repetitions;
+	struct occ *next;
+};
+
 /* a list of all the words */
 struct node
 {
 	char token[200];
-	int repetitions;
-	char *file;
+	struct occ *occHead;
 	struct node *next;
 }*root;
+
 
 struct directoryList
 {
 	char *dir;
 	char *dirName;
+	
 	struct directoryList *next;
 }*dirHead;
 

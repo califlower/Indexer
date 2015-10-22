@@ -29,8 +29,16 @@ void debugPrintWords()
 	while(iter)
 	{
 		printf("%s ", iter->token);
-		printf("%s ", iter->file);
-		printf("%i\n", iter->repetitions);
+		struct occ *occIter = iter->occHead;
+		while (occIter)
+		{
+			printf(" | ");
+			printf("%s ", occIter->file);
+			printf("%i", occIter->repetitions);
+			occIter=occIter->next;
+		}
+		printf("\n");
+		
 		iter = iter->next;
 		
 	}
@@ -135,6 +143,54 @@ void getAllTxt(char * directory)
 }
 
 
+
+void insertOcc(struct occ *head, char *file)
+{
+	/*creates the node to add and the iterator*/
+	struct occ *toInsert=(struct occ *)malloc(sizeof(struct occ));
+	struct occ *iter;
+	
+	toInsert->file=file;
+	toInsert->repetitions=1;
+	iter=head;
+	
+	/* if linked list is empty or the first element is larger than the input*/
+	
+	if (iter==NULL)
+	{
+		head=toInsert;
+		head->next=iter;
+		
+	}
+	
+	else if (strcmp(iter->file,file)==0)
+	{
+		iter->repetitions++;
+		return;
+	}
+	else
+	{
+		
+		while (iter!=NULL)
+		{   
+	
+			if (strcmp(iter->file,file)==0)
+			{
+				iter->repetitions++;
+				return;
+			}				
+			if (iter->next == NULL) 
+			{
+				toInsert->next=iter->next;
+				iter->next=toInsert;
+				return;
+			}
+			iter=iter->next;
+		}
+	}
+
+}
+
 /* a seperate function for insertion. Makes it easier to play around with stuff seperatly from
 the part that actually gets all the words */
 void insert(char input[], char *file)
@@ -143,37 +199,44 @@ void insert(char input[], char *file)
 	struct node *toInsert=(struct node *)malloc(sizeof(struct node));
 	struct node *iter;
 	
-	
 	memcpy(toInsert->token,input, 200);
-	toInsert->repetitions=1;
-	toInsert->file=file;
+	
+	
 	
 	iter=root;
 	
 	if (iter==NULL)
 	{
+		toInsert->occHead=malloc(sizeof(struct occ));
+		toInsert->occHead->file=file;
+		toInsert->occHead->repetitions=1;
+	
 		root=toInsert;
 		root->next=iter;
+		
 			
 	}
-	else if (strcmp(iter->token,input)==0 && strcmp(iter->file,file)==0)
+	else if (strcmp(iter->token,input)==0)
 	{
-		iter->repetitions++;
+		insertOcc(iter->occHead, file);
 	}
 	else
 	{
 		/* traverse while it is not null*/
 		while (iter!=NULL)
 		{   		
-			if (strcmp(iter->token,input)==0 && strcmp(iter->file,file)==0)
+			if (strcmp(iter->token,input)==0)
  			{ 
-				iter->repetitions++;
+				insertOcc(iter->occHead, file);
 				return;				
  			}	 
 
 			if (iter->next == NULL ) 
 			{
 				toInsert->next=iter->next;
+				toInsert->occHead=malloc(sizeof(struct occ));
+				toInsert->occHead->file=file;
+				toInsert->occHead->repetitions=1;
 				iter->next=toInsert;
 				return;
 			}
