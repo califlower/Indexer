@@ -50,7 +50,7 @@ void insert(char input[], char *file);
 /*gets all the words in either a file or directory, and creates a linked list of them*/
 void getAllWords();
 
-int isFile(const char *path);
+
 
 void debugPrintWords();
 
