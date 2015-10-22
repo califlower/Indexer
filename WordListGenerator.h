@@ -9,19 +9,14 @@
 A list of all the files that a word occurs in
 */
 
-struct occList
-{
-	char *file;
-	struct occList *next;
-};
-
 /* a list of all the words */
-struct wordList
+struct Token
 {
-	struct occList *head;
-	char *word;
-	struct wordList *next;
-}*wordHead;
+	char *token;
+	int repetitions;
+	FILE *file;
+	struct Token *next;
+}head;
 
 struct directoryList
 {
