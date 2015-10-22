@@ -21,6 +21,7 @@ struct node
 struct directoryList
 {
 	char *dir;
+	char *dirName;
 	struct directoryList *next;
 }*dirHead;
 
@@ -30,7 +31,7 @@ bool isText(char *name);
 /*populates a linked list with locations of all text files in a directory*/
 void getAllTxt(char *directory);
 
-void insert(char input[]);
+void insert(char input[], char *file);
 
 /*gets all the words in either a file or directory, and creates a linked list of them*/
 void getAllWords();
@@ -39,8 +40,3 @@ void getAllWords();
 void debugPrintWords();
 
 void debugPrintFiles();
-
-
-
-
-
