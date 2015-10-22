@@ -15,6 +15,7 @@ void debugPrintFiles()
 	struct node *temp = root;
 	while(temp!=NULL){
 		printf("%s\n", temp->token);
+		temp = temp->next;
 	}
 	
 	//printf("LOCATIONS OF ALL TEXT FILES\n");
@@ -61,7 +62,7 @@ void getAllTxt(char * directory)
 		{
 			
 			/* This block basically lumps a few strings together so that it can go into subdirectories. Probably not the best way to do things
-			/* but it works well and doesn't seem to cause any issues */
+			but it works well and doesn't seem to cause any issues */
 			
 			char *sl="/";
 			char *dirPart1= malloc(strlen(sl)+strlen(directory)+1);
@@ -124,40 +125,36 @@ void getAllWords()
 
 		while(fscanf(file, "%*[^A-Za-z]"), fscanf(file, "%199[a-zA-Z]", string) > 0) 
 		{
-			printf("%s ", string);
+			printf("%s\n", string);
 		
-			int checker = 0;
-			
-			struct node *temp;
+        		struct node *newnode; // creates a new empty node
+       			newnode  = (struct node*)malloc(sizeof(struct node));    // allocs memory to node         
+       	 		newnode->token=string;
+       	 		newnode->repetitions=0;
+       	 		newnode->file=iter->dir;
+       	 		newnode->next = NULL; // this creates the node and stores the input into the data variable
+       	 		
+       	 		int checker = 0;
+        		struct node *temp;
         		temp = root;
         		
-        		while (temp!=NULL){ //checks to see if the token is already in the list if so, add on the counter.
-        			if (temp->token == string && temp->file==iter->dir){
-        				temp->repetitions++;
-        				checker=1;
+        		/*while (temp!=NULL){
+        			if (temp->token == newnode->token && temp->file == newnode->file){
+        			temp->repetitions++;
+        			checker = 1;
         			}
-        			temp = temp->next;
-        		}
+        		temp = temp->next;
+        		*/
         		
-        		if(checker==0){ // if the token is not in the list, add it on, check to see if root is empty or not as well
-        		
-        			struct node *newnode; // creates a new empty node
-       				newnode  = (struct node*)malloc(sizeof(struct node));    // allocs memory to node         
-       	 			newnode->token=string;
-       	 			newnode->repetitions=0;
-       	 			newnode->file=iter->dir;
-       	 			newnode->next = NULL; // this creates the node and stores the input into the data variable
-       	 		
-       	 			if (root == NULL){ // if the root node is empty, point the root node to this pointer.
-        				root = newnode;
-       	 			}	
+       	 		if (root == NULL){ // if the root node is empty, point the root node to this pointer.
+        			root = newnode;
+       	 		}	
        	 			
-       	 			else{
- 					newnode->next=root; // if the link list is not empty, set whatever head point was pointing to previously equal to newnode-> next
-        				root=newnode;
-       	 			}
-        		}
-        	
+       	 		else{
+ 				newnode->next=root; // if the link list is not empty, set whatever head point was pointing to previously equal to newnode-> next
+        			root=newnode;
+       	 		}
+        		
 		}
 	fclose(file);
 	iter=iter->next;
