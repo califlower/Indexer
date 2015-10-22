@@ -32,7 +32,7 @@ void getAllTxt(char * directory)
 
 	/*If the directory is invalid simply return */
 	if (!file) 
-        return;
+		return;
 
 
 	while (true) 
@@ -47,8 +47,6 @@ void getAllTxt(char * directory)
   
 		directoryName = entry->d_name;
 	
-	
-
 	
 		char path[PATH_MAX];   
 	
@@ -76,6 +74,7 @@ void getAllTxt(char * directory)
 				if (!iter)
 				{
 					iter=malloc(sizeof(struct directoryList));
+					iter->next=NULL;
 					iter->dir=dirFinal;
 					dirHead=iter;
 				}
@@ -111,56 +110,19 @@ void getAllTxt(char * directory)
 void getAllWords()
 {
 	
-	struct directoryList *iter=dirHead;
-	while (iter)
+	struct directoryList *iter;
+	iter=dirHead;
+	while (iter!=NULL)
 	{
-		FILE *textFile = fopen(iter->dir,"r");
-		int character;
-		char *token;
-		   while ((character = fgetc(textFile)) != EOF) 
-		   {
-			   
-			   char poop=(char)character;
-			   printf("%c",poop);
-			   /*if (!isalnum(character))
-			   {
-				if (!token)
-				{
-					continue;
-				}
-				struct wordList *wordIter=wordHead;
-				if (!wordIter)
-				{
-					wordIter=malloc(sizeof(struct wordList));
-					wordIter->word=token;
-					wordHead=wordIter;
-				}
-				else
-				{
-					while (wordIter->next)
-						wordIter=wordIter->next;
-					
-					struct wordList *newWord=malloc(sizeof(struct wordList));
-					newWord->word=token;
-					wordIter->next=newWord;
-				}  
-				continue;
-			   }
-			   else
-			   {
-				
-				char inToChar=(char) character;
-				char toAppend[2]={inToChar, '\0'};
-				char *temp=malloc(sizeof(token)+sizeof(toAppend)+1);
-				strcpy(temp,token);
-				strcat(temp,toAppend);
-				free(token);
-				token=temp;
-			   }*/
-		   }
-		   
+		FILE *file=fopen(iter->dir,"r");
+		char string[200];
 
-		  fclose(textFile);
+		while(fscanf(file, "%*[^A-Za-z]"), fscanf(file, "%199[a-zA-Z]", string) > 0) 
+		{
+			printf("%s ", string);
+		}   
+
+		fclose(file);
 		iter=iter->next;
 	}
   
