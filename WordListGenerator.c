@@ -28,8 +28,9 @@ void debugPrintWords()
 	struct node *iter = root;
 	while(iter)
 	{
-		printf("%s\n", iter->token);
-		printf("%s\n", iter->file);
+		printf("%s ", iter->token);
+		printf("%s ", iter->file);
+		printf("%i\n", iter->repetitions);
 		iter = iter->next;
 		
 	}
@@ -89,8 +90,11 @@ void getAllTxt(char * directory)
 				struct directoryList *iter=dirHead;
 				if (!iter)
 				{
+					
 					iter=malloc(sizeof(struct directoryList));
 					iter->dir=dirFinal;
+					iter->dirName=malloc(PATH_MAX);
+					strncpy(iter->dirName,directoryName, sizeof(PATH_MAX));
 					dirHead=iter;
 				}
 				else
@@ -101,13 +105,21 @@ void getAllTxt(char * directory)
 						
 						struct directoryList *newDirectory=malloc(sizeof(struct directoryList));
 						newDirectory->dir=dirFinal;
+						
+						newDirectory->dirName=malloc(PATH_MAX);
+						strncpy(newDirectory->dirName,directoryName, PATH_MAX);
+						
 						iter->next=newDirectory;
+						
 					#else
 						while (iter->next!=NULL)
 							iter=iter->next;
 						
 						struct directoryList *newDirectory=(struct directoryList *)malloc(sizeof(struct directoryList));
 						newDirectory->dir=dirFinal;
+						newDirectory->dirName=malloc(PATH_MAX);
+						strncpy(newDirectory->dirName,directoryName, PATH_MAX);
+					
 						newDirectory->next=NULL;
 						iter->next=newDirectory;
 					#endif
@@ -123,6 +135,8 @@ void getAllTxt(char * directory)
 }
 
 
+/* a seperate function for insertion. Makes it easier to play around with stuff seperatly from
+the part that actually gets all the words */
 void insert(char input[], char *file)
 {
 	
@@ -131,6 +145,7 @@ void insert(char input[], char *file)
 	
 	
 	memcpy(toInsert->token,input, 200);
+	toInsert->repetitions=1;
 	toInsert->file=file;
 	
 	iter=root;
@@ -139,17 +154,23 @@ void insert(char input[], char *file)
 	{
 		root=toInsert;
 		root->next=iter;
-		
-		
+			
 	}
-
+	else if (strcmp(iter->token,input)==0 && strcmp(iter->file,file)==0)
+	{
+		iter->repetitions++;
+	}
 	else
 	{
 		/* traverse while it is not null*/
 		while (iter!=NULL)
-		{   
-	
-			
+		{   		
+			if (strcmp(iter->token,input)==0 && strcmp(iter->file,file)==0)
+ 			{ 
+				iter->repetitions++;
+				return;				
+ 			}	 
+
 			if (iter->next == NULL ) 
 			{
 				toInsert->next=iter->next;
@@ -159,10 +180,11 @@ void insert(char input[], char *file)
 			iter=iter->next;
 		}
 	}
-
 	return;
 }
 
+
+/*Reads all the words from all the files*/
 void getAllWords()
 {
 	char linestring[BUFSIZ];
@@ -175,24 +197,17 @@ void getAllWords()
 		
 		while(fscanf(file, "%*[^A-Za-z0-9]"), fscanf(file, "%199[a-zA-Z0-9]", string) > 0)
 		{
-			
-			insert(string, iter->dir);
-			
-		}
-		
-		
-		
-	fclose(file);
-	iter=iter->next;
+			insert(string,iter->dirName);
+		}	
+		fclose(file);
+		iter=iter->next;
 	}
-  	
 }
-
 
 int main()
 {	
 
-	getAllTxt("/Users/Saif/Desktop/testcases/comb");
+	getAllTxt("C:/Users/cal13/dropbox");
 	getAllWords();
 	debugPrintFiles();
 	debugPrintWords();
