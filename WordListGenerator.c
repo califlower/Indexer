@@ -11,6 +11,32 @@ bool isText(char *name)
 
 /* prints all the locations of the text files */
 /* For debugging */
+
+void createOutFile(char *name)
+{
+	FILE *file;
+	file=fopen(name,"w");
+	struct node *iter = root;
+	while(iter)
+	{
+		fprintf(file, "%s\n ", iter->token);
+		fprintf(file,"{");
+		struct occ *oIter = iter->occHead;
+		while (oIter)
+		{
+			fprintf(file,"%i ", oIter->repetitions);
+			fprintf(file,"%s", oIter->file);
+			fprintf(file,",");
+			oIter=oIter->next;
+		}
+		fprintf(file,"}");
+		fprintf(file,"\n");
+		iter = iter->next;
+		
+	}
+	fclose(file);
+}
+
 void debugPrintFiles()
 {
 	struct directoryList *iter=dirHead;
@@ -283,10 +309,16 @@ void getAllWords()
 
 int main(int argc, char** argv)
 {	
+	if (argc!=3)
+	{
+		printf("You need the correct amount of arguments");
+		return 1;
+	}
 
-	getAllTxt(argv[1]);
+	getAllTxt(argv[2]);
 	getAllWords();
 	debugPrintFiles();
 	debugPrintWords();
+	createOutFile(argv[1]);
 	return 0;
 }
