@@ -324,6 +324,25 @@ int main(int argc, char** argv)
 	getAllWords();
 	debugPrintFiles();
 	debugPrintWords();
-	createOutFile(argv[1]);
+	
+	FILE *file;
+	file = fopen (argv[1],"r");
+	if (!file) 
+		createOutFile(argv[1]);
+	else
+	{
+		char str1[20];
+		printf("Would you like to overrite an existing output file? Y/N ");
+		scanf("%s", &str1);
+		if (strcmp(str1,"Y")==0 || strcmp(str1,"y")==0)
+		{
+			createOutFile(argv[1]);
+		}
+		else
+			return 0;
+		
+
+	}
+	
 	return 0;
 }
