@@ -1,6 +1,7 @@
 #include "WordListGenerator.h"
 #include <unistd.h>
 
+/*Determines if a file is a text file or not */
 bool isText(char *name)
 {
     size_t len = strlen(name);
@@ -322,8 +323,10 @@ int main(int argc, char** argv)
 
 	getAllTxt(argv[2]);
 	getAllWords();
+	/* Comment out debug commands
 	debugPrintFiles();
 	debugPrintWords();
+	*/
 	
 	FILE *file;
 	file = fopen (argv[1],"r");
