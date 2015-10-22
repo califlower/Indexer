@@ -5,6 +5,10 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 /*
 A list of all the files that a word occurs in
 */
@@ -46,6 +50,7 @@ void insert(char input[], char *file);
 /*gets all the words in either a file or directory, and creates a linked list of them*/
 void getAllWords();
 
+int isFile(const char *path);
 
 void debugPrintWords();
 

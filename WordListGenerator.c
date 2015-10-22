@@ -7,6 +7,12 @@ bool isText(char *name)
     return len > 4 && strcmp(name + len - 4, ".txt") == 0;
 }
 
+int isFile(const char *path)
+{
+    struct stat path_stat;
+    stat(path, &path_stat);
+    return S_ISREG(path_stat.st_mode);
+}
 
 /* prints all the locations of the text files */
 /* For debugging */
@@ -51,6 +57,19 @@ this includes subfolders and whatnot */
 
 void getAllTxt(char * directory)
 {
+	
+	
+	if (strstr(directory, "/") == NULL && isText(directory))
+	{
+		
+		struct directoryList *iter=malloc(sizeof(struct directoryList));
+		iter->dir=directory;
+		iter->dirName=directory;
+		iter->next=NULL;	
+		dirHead=iter;
+		return;
+	}
+	
 	DIR *file;
 	file = opendir (directory);
 
