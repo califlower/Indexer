@@ -28,17 +28,10 @@ void debugPrintWords()
 	struct node *iter = root;
 	while(iter)
 	{
-		printf("%s ", iter->token);
-		struct occ *occIter = iter->occHead;
-		while (occIter)
-		{
-			printf(" | ");
-			printf("%s ", occIter->file);
-			printf("%i", occIter->repetitions);
-			occIter=occIter->next;
-		}
+		printf("%s", iter->token);
+
 		printf("\n");
-		
+	
 		iter = iter->next;
 		
 	}
@@ -70,11 +63,6 @@ void getAllTxt(char * directory)
   
 		directoryName = entry->d_name;
 	
-	
-
-	
-		char path[PATH_MAX];   
-	
 		if (strcmp (directoryName, "..") != 0 && strcmp (directoryName, ".") != 0) 
 		{
 			
@@ -103,12 +91,13 @@ void getAllTxt(char * directory)
 					iter->dir=dirFinal;
 					iter->dirName=malloc(PATH_MAX);
 					strncpy(iter->dirName,directoryName, sizeof(PATH_MAX));
+					iter->next=NULL;
 					dirHead=iter;
 				}
 				else
 				{
 					#ifdef _WIN32
-						while (iter->next)
+						while (iter->next!=NULL)
 							iter=iter->next;
 						
 						struct directoryList *newDirectory=malloc(sizeof(struct directoryList));
@@ -116,7 +105,7 @@ void getAllTxt(char * directory)
 						
 						newDirectory->dirName=malloc(PATH_MAX);
 						strncpy(newDirectory->dirName,directoryName, PATH_MAX);
-						
+						newDirectory->next=NULL;
 						iter->next=newDirectory;
 						
 					#else
@@ -149,23 +138,27 @@ void insertOcc(struct occ *head, char *file)
 	/*creates the node to add and the iterator*/
 	struct occ *toInsert=(struct occ *)malloc(sizeof(struct occ));
 	struct occ *iter;
-	
-	toInsert->file=file;
+	toInsert->file=malloc(PATH_MAX);
+	strncpy(toInsert->file,file,PATH_MAX);
 	toInsert->repetitions=1;
+	
 	iter=head;
 	
 	/* if linked list is empty or the first element is larger than the input*/
 	
 	if (iter==NULL)
 	{
+	
 		head=toInsert;
 		head->next=iter;
-		
+		return;
 	}
 	
 	else if (strcmp(iter->file,file)==0)
 	{
+
 		iter->repetitions++;
+		iter->file=file;
 		return;
 	}
 	else
@@ -181,7 +174,7 @@ void insertOcc(struct occ *head, char *file)
 			}				
 			if (iter->next == NULL) 
 			{
-				toInsert->next=iter->next;
+				toInsert->next=NULL;
 				iter->next=toInsert;
 				return;
 			}
@@ -207,14 +200,13 @@ void insert(char input[], char *file)
 	
 	if (iter==NULL)
 	{
-		toInsert->occHead=malloc(sizeof(struct occ));
-		toInsert->occHead->file=file;
-		toInsert->occHead->repetitions=1;
-	
+		toInsert->occHead=NULL;
+		toInsert->next=NULL;
+		insertOcc(toInsert->occHead,file);
 		root=toInsert;
 		root->next=iter;
 		
-			
+		return;	
 	}
 	else if (strcmp(iter->token,input)==0)
 	{
@@ -233,10 +225,9 @@ void insert(char input[], char *file)
 
 			if (iter->next == NULL ) 
 			{
-				toInsert->next=iter->next;
-				toInsert->occHead=malloc(sizeof(struct occ));
-				toInsert->occHead->file=file;
-				toInsert->occHead->repetitions=1;
+				toInsert->next=NULL;
+				toInsert->occHead=NULL;
+				insertOcc(toInsert->occHead,file);
 				iter->next=toInsert;
 				return;
 			}
@@ -250,7 +241,7 @@ void insert(char input[], char *file)
 /*Reads all the words from all the files*/
 void getAllWords()
 {
-	char linestring[BUFSIZ];
+
 	struct directoryList *iter=dirHead;
 	
 	while (iter!=NULL)
