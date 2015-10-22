@@ -144,7 +144,7 @@ void getAllTxt(char * directory)
 						iter->dirName=malloc(PATH_MAX);
 						strncpy(iter->dirName,directoryName, sizeof(PATH_MAX));
 					#else
-						it->dirName=directoryName;
+						iter->dirName=directoryName;
 					#endif
 					iter->next=NULL;
 					dirHead=iter;
