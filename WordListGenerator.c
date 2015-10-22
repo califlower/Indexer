@@ -123,7 +123,7 @@ void getAllTxt(char * directory)
 }
 
 
-void insert(char input[])
+void insert(char input[], char *file)
 {
 	
 	struct node *toInsert=(struct node *)malloc(sizeof(struct node));
@@ -131,6 +131,7 @@ void insert(char input[])
 	
 	
 	memcpy(toInsert->token,input, 200);
+	toInsert->file=file;
 	
 	iter=root;
 	
@@ -172,10 +173,10 @@ void getAllWords()
 		FILE *file=fopen(iter->dir,"r");
 		char string[200];
 		
-		while(fscanf(file, "%*[^A-Za-z]"), fscanf(file, "%199[a-zA-Z]", string) > 0)
+		while(fscanf(file, "%*[^A-Za-z0-9]"), fscanf(file, "%199[a-zA-Z0-9]", string) > 0)
 		{
 			
-			insert(string);
+			insert(string, iter->dir);
 			
 		}
 		
@@ -191,7 +192,7 @@ void getAllWords()
 int main()
 {	
 
-	getAllTxt("C:/Users/cal13/dropbox");
+	getAllTxt("/Users/Saif/Desktop/testcases/comb");
 	getAllWords();
 	debugPrintFiles();
 	debugPrintWords();
