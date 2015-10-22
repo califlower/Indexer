@@ -10,13 +10,13 @@ A list of all the files that a word occurs in
 */
 
 /* a list of all the words */
-struct Token
+struct node
 {
 	char *token;
 	int repetitions;
-	FILE *file;
-	struct Token *next;
-}head;
+	char *file;
+	struct node *next;
+}*root;
 
 struct directoryList
 {
