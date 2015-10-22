@@ -132,13 +132,20 @@ void getAllTxt(char * directory)
 			{	
 			
 				struct directoryList *iter=dirHead;
+				
+				
 				if (!iter)
 				{
 					
 					iter=malloc(sizeof(struct directoryList));
 					iter->dir=dirFinal;
-					iter->dirName=malloc(PATH_MAX);
-					strncpy(iter->dirName,directoryName, sizeof(PATH_MAX));
+					
+					#ifdef _WIN32
+						iter->dirName=malloc(PATH_MAX);
+						strncpy(iter->dirName,directoryName, sizeof(PATH_MAX));
+					#else
+						it->dirName=directoryName;
+					#endif
 					iter->next=NULL;
 					dirHead=iter;
 				}
@@ -162,9 +169,7 @@ void getAllTxt(char * directory)
 						
 						struct directoryList *newDirectory=(struct directoryList *)malloc(sizeof(struct directoryList));
 						newDirectory->dir=dirFinal;
-						newDirectory->dirName=malloc(PATH_MAX);
-						strncpy(newDirectory->dirName,directoryName, PATH_MAX);
-					
+						newDirectory->dirName=directoryName;
 						newDirectory->next=NULL;
 						iter->next=newDirectory;
 					#endif
