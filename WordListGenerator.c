@@ -126,6 +126,53 @@ void getAllWords()
 		iter=iter->next;
 	}
   
+  		//Just need to edit it for multiple findings of the token, just needs to be modified slightly
+  		
+		 /*struct node *temp;
+        	struct node *current; 
+        	struct node *previous;
+        	temp = root;
+        	int checker = 0;
+        	
+        	while (temp!=NULL){
+        		if (temp->data == newnode->data){
+        			checker = 1;
+        		}
+        		temp = temp->next;
+        	}
+    
+       	 	if (root == NULL){ // if the root node is empty, point the root node to this pointer.
+        		root = newnode;
+       	 	}
+
+        	else if (checker==0){ // if the token is not in the list then try to add it in
+ 				if (newnode->data < root->data){
+ 					newnode->next=root; // if the link list is not empty, set whatever head point was pointing to previously equal to newnode-> next
+        			root=newnode;
+        		}
+        		current = root;
+        		if (newnode->data > root->data){
+						int z = 0;
+						current = root;
+						
+						while (current->next!= NULL && current!= NULL){
+							previous = current; 
+							current = current->next;
+						
+							if (newnode->data < current->data){
+								previous->next = newnode;
+								newnode->next = current;
+								z = 1;
+								break;
+							}	
+						}
+						if (current->next == NULL && z!=1){
+							current->next = newnode;
+						}
+        		}
+ 			}    
+ 		} 
+ 		*/
 	
 	
 }
