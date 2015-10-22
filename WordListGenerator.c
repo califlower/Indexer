@@ -12,13 +12,18 @@ bool isText(char *name)
 void debugPrintFiles()
 {
 	struct directoryList *iter=dirHead;
-	printf("LOCATIONS OF ALL TEXT FILES\n");
-	printf("************************************\n");
-	while (iter)
-	{
-		printf ("%s\n", iter->dir);
-		iter=iter->next;
+	struct node *temp = root;
+	while(temp!=NULL){
+		printf("%s\n", temp->token);
 	}
+	
+	//printf("LOCATIONS OF ALL TEXT FILES\n");
+	//printf("************************************\n");
+	//while (iter)
+	//{
+	//	printf ("%s\n", iter->dir);
+	//	iter=iter->next;
+	//}
 }
 
 
@@ -32,7 +37,7 @@ void getAllTxt(char * directory)
 
 	/*If the directory is invalid simply return */
 	if (!file) 
-		return;
+        return;
 
 
 	while (true) 
@@ -47,6 +52,8 @@ void getAllTxt(char * directory)
   
 		directoryName = entry->d_name;
 	
+	
+
 	
 		char path[PATH_MAX];   
 	
@@ -74,7 +81,6 @@ void getAllTxt(char * directory)
 				if (!iter)
 				{
 					iter=malloc(sizeof(struct directoryList));
-					iter->next=NULL;
 					iter->dir=dirFinal;
 					dirHead=iter;
 				}
@@ -109,9 +115,8 @@ void getAllTxt(char * directory)
 
 void getAllWords()
 {
-	
-	struct directoryList *iter;
-	iter=dirHead;
+	char linestring[BUFSIZ];
+	struct directoryList *iter=dirHead;
 	while (iter!=NULL)
 	{
 		FILE *file=fopen(iter->dir,"r");
@@ -120,72 +125,54 @@ void getAllWords()
 		while(fscanf(file, "%*[^A-Za-z]"), fscanf(file, "%199[a-zA-Z]", string) > 0) 
 		{
 			printf("%s ", string);
-		}   
-
-		fclose(file);
-		iter=iter->next;
-	}
-  
-  		//Just need to edit it for multiple findings of the token, just needs to be modified slightly
-  		
-		 /*struct node *temp;
-        	struct node *current; 
-        	struct node *previous;
-        	temp = root;
-        	int checker = 0;
-        	
-        	while (temp!=NULL){
-        		if (temp->data == newnode->data){
-        			checker = 1;
+		
+			int checker = 0;
+			
+			struct node *temp;
+        		temp = root;
+        		
+        		while (temp!=NULL){ //checks to see if the token is already in the list if so, add on the counter.
+        			if (temp->token == string && temp->file==iter->dir){
+        				temp->repetitions++;
+        				checker=1;
+        			}
+        			temp = temp->next;
         		}
-        		temp = temp->next;
-        	}
-    
-       	 	if (root == NULL){ // if the root node is empty, point the root node to this pointer.
-        		root = newnode;
-       	 	}
-
-        	else if (checker==0){ // if the token is not in the list then try to add it in
- 				if (newnode->data < root->data){
+        		
+        		if(checker==0){ // if the token is not in the list, add it on, check to see if root is empty or not as well
+        		
+        			struct node *newnode; // creates a new empty node
+       				newnode  = (struct node*)malloc(sizeof(struct node));    // allocs memory to node         
+       	 			newnode->token=string;
+       	 			newnode->repetitions=0;
+       	 			newnode->file=iter->dir;
+       	 			newnode->next = NULL; // this creates the node and stores the input into the data variable
+       	 		
+       	 			if (root == NULL){ // if the root node is empty, point the root node to this pointer.
+        				root = newnode;
+       	 			}	
+       	 			
+       	 			else{
  					newnode->next=root; // if the link list is not empty, set whatever head point was pointing to previously equal to newnode-> next
-        			root=newnode;
+        				root=newnode;
+       	 			}
         		}
-        		current = root;
-        		if (newnode->data > root->data){
-						int z = 0;
-						current = root;
-						
-						while (current->next!= NULL && current!= NULL){
-							previous = current; 
-							current = current->next;
-						
-							if (newnode->data < current->data){
-								previous->next = newnode;
-								newnode->next = current;
-								z = 1;
-								break;
-							}	
-						}
-						if (current->next == NULL && z!=1){
-							current->next = newnode;
-						}
-        		}
- 			}    
- 		} 
- 		*/
-	
-	
+        	
+		}
+	fclose(file);
+	iter=iter->next;
+	}
+  	
 }
 
 
 int main()
 {	
 
-	getAllTxt("C:/Users/cal13/dropbox");
+	getAllTxt("/Users/Saif/Desktop/testcases/comb");
 	
 	debugPrintFiles();
 	
 	getAllWords();
 	return 0;
 }
-
