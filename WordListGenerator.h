@@ -12,7 +12,7 @@ A list of all the files that a word occurs in
 /* a list of all the words */
 struct node
 {
-	char *token;
+	char token[200];
 	int repetitions;
 	char *file;
 	struct node *next;
@@ -29,6 +29,8 @@ bool isText(char *name);
 
 /*populates a linked list with locations of all text files in a directory*/
 void getAllTxt(char *directory);
+
+void insert(char input[]);
 
 /*gets all the words in either a file or directory, and creates a linked list of them*/
 void getAllWords();

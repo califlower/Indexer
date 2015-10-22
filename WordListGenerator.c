@@ -1,4 +1,5 @@
 #include "WordListGenerator.h"
+#include <unistd.h>
 
 bool isText(char *name)
 {
@@ -12,20 +13,26 @@ bool isText(char *name)
 void debugPrintFiles()
 {
 	struct directoryList *iter=dirHead;
-	struct node *temp = root;
-	while(temp!=NULL){
-		printf("%s\n", temp->token);
-		printf("%s\n", temp->file);
-		temp = temp->next;
+	printf("LOCATIONS OF ALL TEXT FILES\n");
+	printf("************************************\n");
+	while (iter)
+	{
+		printf ("%s\n", iter->dir);
+		iter=iter->next;
+		
 	}
-	
-	//printf("LOCATIONS OF ALL TEXT FILES\n");
-	//printf("************************************\n");
-	//while (iter)
-	//{
-	//	printf ("%s\n", iter->dir);
-	//	iter=iter->next;
-	//}
+}
+
+void debugPrintWords()
+{
+	struct node *iter = root;
+	while(iter)
+	{
+		printf("%s\n", iter->token);
+		printf("%s\n", iter->file);
+		iter = iter->next;
+		
+	}
 }
 
 
@@ -115,55 +122,65 @@ void getAllTxt(char * directory)
 	closedir(file);
 }
 
+
+void insert(char input[])
+{
+	
+	struct node *toInsert=(struct node *)malloc(sizeof(struct node));
+	struct node *iter;
+	
+	
+	memcpy(toInsert->token,input, 200);
+	
+	iter=root;
+	
+	if (iter==NULL)
+	{
+		root=toInsert;
+		root->next=iter;
+		
+		
+	}
+
+	else
+	{
+		/* traverse while it is not null*/
+		while (iter!=NULL)
+		{   
+	
+			
+			if (iter->next == NULL ) 
+			{
+				toInsert->next=iter->next;
+				iter->next=toInsert;
+				return;
+			}
+			iter=iter->next;
+		}
+	}
+
+	return;
+}
+
 void getAllWords()
 {
 	char linestring[BUFSIZ];
 	struct directoryList *iter=dirHead;
+	
 	while (iter!=NULL)
 	{
 		FILE *file=fopen(iter->dir,"r");
 		char string[200];
-
-		while(fscanf(file, "%*[^A-Za-z]"), fscanf(file, "%199[a-zA-Z]", string) > 0) 
-		{
 		
-        		struct node *newnode; // creates a new empty node
-       			newnode  = (struct node*)malloc(sizeof(struct node));    // allocs memory to node         
-       	 		newnode->token=string;
-       	 		newnode->repetitions=0;
-       	 		newnode->file=iter->dir;
-       	 		newnode->next = NULL; // this creates the node and stores the input into the data variable
-       	 		
-       	 		int checker = 0;
-        		struct node *temp;
-        		temp = root;
-        		
-        		/*while (temp!=NULL){
-        			if (temp->token == newnode->token && temp->file == newnode->file){
-        			temp->repetitions++;
-        			checker = 1;
-        			}
-        		temp = temp->next;
-        		*/
-        		
-       	 		if (root == NULL){ // if the root node is empty, point the root node to this pointer.
-        			root = newnode;		
-        			printf("This is the root:%s\n", root->token);	
-        			printf("This is the newnode:%s\n", newnode->token);	
-       	 			printf("This is the root:%s\n", root->file);	
-       	 			printf("This is the newnode:%s\n", newnode->file);	
-       	 		}	
-       	 			
-       	 		else{
- 				newnode->next=root; // if the link list is not empty, set whatever head point was pointing to previously equal to newnode-> next
-        			root=newnode;
-        			printf("This is the root:%s\n", root->token);	
-        			printf("This is the newnode:%s\n", newnode->token);	
-       	 			printf("This is the root:%s\n", root->file);	
-       	 			printf("This is the newnode:%s\n", newnode->file);	
-       	 		}
-        		
+		while(fscanf(file, "%*[^A-Za-z]"), fscanf(file, "%199[a-zA-Z]", string) > 0)
+		{
+			
+			insert(string);
+			
 		}
+		
+		
+		
 	fclose(file);
 	iter=iter->next;
 	}
@@ -174,9 +191,9 @@ void getAllWords()
 int main()
 {	
 
-	getAllTxt("/Users/Saif/Desktop/testcases/comb");
+	getAllTxt("C:/Users/cal13/dropbox");
 	getAllWords();
 	debugPrintFiles();
-	
+	debugPrintWords();
 	return 0;
 }
