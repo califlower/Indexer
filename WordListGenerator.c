@@ -28,10 +28,18 @@ void debugPrintWords()
 	struct node *iter = root;
 	while(iter)
 	{
-		printf("%s", iter->token);
-
+		printf("%s\n ", iter->token);
+		printf("{");
+		struct occ *oIter = iter->occHead;
+		while (oIter)
+		{
+			printf("%i ", oIter->repetitions);
+			printf("%s", oIter->file);
+			printf(",");
+			oIter=oIter->next;
+		}
+		printf("}");
 		printf("\n");
-	
 		iter = iter->next;
 		
 	}
@@ -133,13 +141,13 @@ void getAllTxt(char * directory)
 
 
 
-void insertOcc(struct occ *head, char *file)
+struct occ *insertOcc(struct occ *head, char *file)
 {
 	/*creates the node to add and the iterator*/
 	struct occ *toInsert=(struct occ *)malloc(sizeof(struct occ));
 	struct occ *iter;
-	toInsert->file=malloc(PATH_MAX);
-	strncpy(toInsert->file,file,PATH_MAX);
+	toInsert->file=file;
+	
 	toInsert->repetitions=1;
 	
 	iter=head;
@@ -151,7 +159,7 @@ void insertOcc(struct occ *head, char *file)
 	
 		head=toInsert;
 		head->next=iter;
-		return;
+		return head;
 	}
 	
 	else if (strcmp(iter->file,file)==0)
@@ -159,7 +167,7 @@ void insertOcc(struct occ *head, char *file)
 
 		iter->repetitions++;
 		iter->file=file;
-		return;
+		return head;
 	}
 	else
 	{
@@ -170,16 +178,17 @@ void insertOcc(struct occ *head, char *file)
 			if (strcmp(iter->file,file)==0)
 			{
 				iter->repetitions++;
-				return;
+				return head;
 			}				
 			if (iter->next == NULL) 
 			{
 				toInsert->next=NULL;
 				iter->next=toInsert;
-				return;
+				return head;
 			}
 			iter=iter->next;
 		}
+		return head;
 	}
 
 }
@@ -202,7 +211,7 @@ void insert(char input[], char *file)
 	{
 		toInsert->occHead=NULL;
 		toInsert->next=NULL;
-		insertOcc(toInsert->occHead,file);
+		toInsert->occHead=insertOcc(toInsert->occHead,file);
 		root=toInsert;
 		root->next=iter;
 		
@@ -219,7 +228,7 @@ void insert(char input[], char *file)
 		{   		
 			if (strcmp(iter->token,input)==0)
  			{ 
-				insertOcc(iter->occHead, file);
+				iter->occHead=insertOcc(iter->occHead, file);
 				return;				
  			}	 
 
@@ -227,7 +236,7 @@ void insert(char input[], char *file)
 			{
 				toInsert->next=NULL;
 				toInsert->occHead=NULL;
-				insertOcc(toInsert->occHead,file);
+				toInsert->occHead=insertOcc(toInsert->occHead,file);
 				iter->next=toInsert;
 				return;
 			}
