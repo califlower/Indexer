@@ -24,19 +24,25 @@ void createOutFile(char *name)
 	while(iter)
 	{
 		struct occ *oIter = iter->occHead;
-		
-		fprintf(file, "%s\n ", iter->token);
 		fprintf(file,"{");
+		fprintf(file, "%s", iter->token);
+		fprintf(file," : [\n");
+		
 		
 		while (oIter)
 		{
-			fprintf(file,"%i ", oIter->repetitions);
+			fprintf(file,"	{");
 			fprintf(file,"%s", oIter->file);
-			fprintf(file,",");
+			fprintf(file,":");
+			fprintf(file,"%i ", oIter->repetitions);
+			fprintf(file,"}");
 			oIter=oIter->next;
+			if (oIter)
+				fprintf(file,",\n");
+			else
+				fprintf(file,"\n");
 		}
-		fprintf(file,"}");
-		fprintf(file,"\n");
+		fprintf(file,"}]\n");;
 		iter = iter->next;
 		
 	}
@@ -165,10 +171,9 @@ example its the root node */
 					iter->dir=dirFinal;
 					
 					#ifdef _WIN32
-						iter->dirName=malloc(PATH_MAX);
-						strncpy(iter->dirName,directoryName, sizeof(PATH_MAX));
+						iter->dirName=dirFinal;
 					#else
-						iter->dirName=directoryName;
+						iter->dirName=dirFinal;
 					#endif
 					
 					iter->next=NULL;
@@ -183,10 +188,7 @@ example its the root node */
 							iter=iter->next;
 						
 						newDirectory->dir=dirFinal;
-						newDirectory->dirName=malloc(PATH_MAX);
-						
-						strncpy(newDirectory->dirName,directoryName, PATH_MAX);
-						
+						newDirectory->dirName=dirFinal;
 						newDirectory->next=NULL;
 						iter->next=newDirectory;
 						
@@ -196,7 +198,7 @@ example its the root node */
 							iter=iter->next;
 						
 						newDirectory->dir=dirFinal;
-						newDirectory->dirName=directoryName;
+						newDirectory->dirName=dirFinal;
 						newDirectory->next=NULL;
 						
 						iter->next=newDirectory;
