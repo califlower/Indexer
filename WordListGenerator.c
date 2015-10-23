@@ -1,5 +1,5 @@
 #include "WordListGenerator.h"
-#include <unistd.h>
+
 
 /*Determines if a file is a text file or not */
 bool isText(char *name)
@@ -8,11 +8,7 @@ bool isText(char *name)
     return len > 4 && strcmp(name + len - 4, ".txt") == 0;
 }
 
-
-
-/* prints all the locations of the text files */
-/* For debugging */
-
+/* Create the output file given a character name */
 void createOutFile(char *name)
 {
 	FILE *file;
@@ -38,6 +34,7 @@ void createOutFile(char *name)
 	fclose(file);
 }
 
+/*Debug print all file locations of text files */
 void debugPrintFiles()
 {
 	struct directoryList *iter=dirHead;
@@ -51,6 +48,7 @@ void debugPrintFiles()
 	}
 }
 
+/* Print all words and their occurences for debugging purposes */
 void debugPrintWords()
 {
 	struct node *iter = root;
@@ -134,7 +132,7 @@ void getAllTxt(char * directory)
 			
 				struct directoryList *iter=dirHead;
 				
-				
+				/* Some OS specific stuff that allows me to change things up depending on the OS */
 				if (!iter)
 				{
 					
@@ -198,7 +196,7 @@ struct occ *insertOcc(struct occ *head, char *file)
 	
 	iter=head;
 	
-	/* if linked list is empty or the first element is larger than the input*/
+	/* if linked list is empty */
 	
 	if (iter==NULL)
 	{
@@ -247,9 +245,8 @@ void insert(char input[], char *file)
 	struct node *toInsert=(struct node *)malloc(sizeof(struct node));
 	struct node *iter;
 	
+	/*Did it this way because a char array and a string are not in fact identical */
 	memcpy(toInsert->token,input, 200);
-	
-	
 	
 	iter=root;
 	
