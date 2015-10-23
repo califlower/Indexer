@@ -1,23 +1,30 @@
 #include "WordListGenerator.h"
 
 
-/*Determines if a file is a text file or not */
+/*************
+ * Determines if a char file name is a text file given the full file name
+ * This was created because linux has no way to determine file extensions
+**************/
 bool isText(char *name)
 {
-    size_t len = strlen(name);
-    return len > 4 && strcmp(name + len - 4, ".txt") == 0;
+	size_t len = strlen(name);
+	return len > 4 && strcmp(name + len - 4, ".txt") == 0;
 }
 
-/* Create the output file given a character name */
+/*************
+ * This will create an output file based on the results of the previous run functions
+ * GetALllText and GetAllWords should be run in that order, before this function.
+ * Makes uses of global node variables that cannot really be accessed
+ *************/
 void createOutFile(char *name)
 {
 	struct node *iter = root;
-	FILE *file;
-	file=fopen(name,"w");
+	FILE *file=fopen(name,"w");
 	
 	while(iter)
 	{
 		struct occ *oIter = iter->occHead;
+		
 		fprintf(file, "%s\n ", iter->token);
 		fprintf(file,"{");
 		
@@ -36,27 +43,34 @@ void createOutFile(char *name)
 	fclose(file);
 }
 
-/*Debug print all file locations of text files */
+/***************
+ * For debugging purposes, print all the locations of all the text files in the specific directory
+**************/
 void debugPrintFiles()
 {
 	struct directoryList *iter=dirHead;
+	
 	printf("LOCATIONS OF ALL TEXT FILES\n");
 	printf("************************************\n");
+	
 	while (iter)
 	{
 		printf ("%s\n", iter->dir);
 		iter=iter->next;
-		
 	}
 }
 
-/* Print all words and their occurences for debugging purposes */
+/**********************
+ * For Debugging purposes print all words and their occurrences
+ * Should be identical to the output file
+********************/
 void debugPrintWords()
 {
 	struct node *iter = root;
 	while(iter)
 	{
 		struct occ *oIter = iter->occHead;
+		
 		printf("%s\n ", iter->token);
 		printf("{");
 		
@@ -65,23 +79,31 @@ void debugPrintWords()
 			printf("%i ", oIter->repetitions);
 			printf("%s", oIter->file);
 			printf(",");
+			
 			oIter=oIter->next;
 		}
+		
 		printf("}");
 		printf("\n");
+		
 		iter = iter->next;
 		
 	}
 }
 
 
-/*populates a linked list with all the locations of a text file in a directory
-this includes subfolders and whatnot */
+/**************************
+ * Recursively goes through an entire directory and
+ * stores all the locations of every text file
+************************/
 
 void getAllTxt(char * directory)
 {
 	DIR *file;
-	
+/*
+If the given directory doesn't have any slashes, assume that it's just a file. Probably would work fine without this
+but can't take chances
+*/
 	if (strstr(directory, "/") == NULL && isText(directory))
 	{
 		
@@ -96,9 +118,9 @@ void getAllTxt(char * directory)
 	
 	file = opendir (directory);
 
-	/*If the directory is invalid simply return */
-	if (!file) 
-        return;
+/*If the directory is invalid simply return */
+	if (!file)
+        	return;
 
 
 	while (true) 
@@ -107,7 +129,7 @@ void getAllTxt(char * directory)
 		char * directoryName;
 		entry = readdir (file);
 	
-	/*break the loop if it can't open the file */
+/*break the loop if it can't open the file */
 		if (!entry)		
 			break;
   
@@ -116,28 +138,29 @@ void getAllTxt(char * directory)
 		if (strcmp (directoryName, "..") != 0 && strcmp (directoryName, ".") != 0) 
 		{
 			
-			/* This block basically lumps a few strings together so that it can go into subdirectories. Probably not the best way to do things
-			but it works well and doesn't seem to cause any issues */
+/* This block basically lumps a few strings together so that it can go into subdirectories. Probably not the best way to do things
+but it works well and doesn't seem to cause any issues */
 			
 			char *sl="/";
 			char *dirPart1= malloc(strlen(sl)+strlen(directory)+1);
 			char *dirFinal = malloc(strlen(directoryName)+strlen(dirPart1)+1);
+			
 			strcpy(dirPart1,directory);
 			strcat(dirPart1,sl);
 			
 			strcpy(dirFinal, dirPart1);
 			strcat(dirFinal, directoryName);
 			
-			/*if its a text file, throw it into the directory linked list */
+/*if its a text file, throw it into the directory linked list */
 			if (isText(directoryName)==true)
 			{	
 			
 				struct directoryList *iter=dirHead;
 				
-				/* Some OS specific stuff that allows me to change things up depending on the OS */
+/* Some OS specific stuff that allows me to change things up depending on the OS. If the iterator is null do this. For
+example its the root node */
 				if (!iter)
 				{
-					
 					iter=malloc(sizeof(struct directoryList));
 					iter->dir=dirFinal;
 					
@@ -147,9 +170,11 @@ void getAllTxt(char * directory)
 					#else
 						iter->dirName=directoryName;
 					#endif
+					
 					iter->next=NULL;
 					dirHead=iter;
 				}
+/* If its not null, go to the end and tack some stuff on. Going to the end preserves the order */
 				else
 				{
 					#ifdef _WIN32
@@ -157,10 +182,11 @@ void getAllTxt(char * directory)
 						while (iter->next!=NULL)
 							iter=iter->next;
 						
-						
 						newDirectory->dir=dirFinal;
 						newDirectory->dirName=malloc(PATH_MAX);
+						
 						strncpy(newDirectory->dirName,directoryName, PATH_MAX);
+						
 						newDirectory->next=NULL;
 						iter->next=newDirectory;
 						
@@ -169,10 +195,10 @@ void getAllTxt(char * directory)
 						while (iter->next!=NULL)
 							iter=iter->next;
 						
-						
 						newDirectory->dir=dirFinal;
 						newDirectory->dirName=directoryName;
 						newDirectory->next=NULL;
+						
 						iter->next=newDirectory;
 					#endif
 				}
@@ -187,7 +213,11 @@ void getAllTxt(char * directory)
 }
 
 
-
+/*********
+ * Given a head node, inserts an occurences into the occurrence list
+ * Made into a seperate function to make the other functions neater
+ * Code was rcycled from a previous project
+**********/
 struct occ *insertOcc(struct occ *head, char *file)
 {
 	/*creates the node to add and the iterator*/
@@ -240,15 +270,18 @@ struct occ *insertOcc(struct occ *head, char *file)
 
 }
 
-/* a seperate function for insertion. Makes it easier to play around with stuff seperatly from
-the part that actually gets all the words */
+/****************
+ * a seperate function for insertion. Makes it easier to play around with stuff seperatly from 
+ * the part that actually gets all the words. This one helps insert stuff into the word list. 
+ ***************/
 void insert(char input[], char *file)
 {
 	
 	struct node *toInsert=(struct node *)malloc(sizeof(struct node));
 	struct node *iter;
 	
-	/*Did it this way because a char array and a string are not in fact identical */
+/*Did it this way because a char array and a string are not in fact identical. 
+A string is a char array, but a char array is not neccarily a string. Who knew.  */
 	memcpy(toInsert->token,input, 200);
 	
 	iter=root;
@@ -258,6 +291,7 @@ void insert(char input[], char *file)
 		toInsert->occHead=NULL;
 		toInsert->next=NULL;
 		toInsert->occHead=insertOcc(toInsert->occHead,file);
+		
 		root=toInsert;
 		root->next=iter;
 		
@@ -293,7 +327,10 @@ void insert(char input[], char *file)
 }
 
 
-/*Reads all the words from all the files*/
+/*********
+ * Reads every word from every text file that was put into the list by the 
+ * getAllText. Should only ever be run after getAllText
+************/
 void getAllWords()
 {
 
@@ -304,21 +341,29 @@ void getAllWords()
 		FILE *file=fopen(iter->dir,"r");
 		char string[200];
 		
+/* Only scans alphanumeric stuff. Takes care of parsing in one nice swoop */
 		while(fscanf(file, "%*[^A-Za-z0-9]"), fscanf(file, "%199[a-zA-Z0-9]", string) > 0)
 		{
 			insert(string,iter->dirName);
 		}	
 		fclose(file);
+		
 		iter=iter->next;
 	}
 }
 
+
+/********
+ * Main file was put in here because the program test cases are not run from the main file
+ * It just accepts command line args
+ * This main deals with some prompts like outputing overwriting and stuff
+*******/
 int main(int argc, char** argv)
 {	
 	FILE *file;
 	if (argc!=3)
 	{
-		printf("You need the correct amount of arguments");
+		printf("You have inputted the wrong amount of arguments. You need to have 3 arguments (this includes the program name itself");
 		return 1;
 	}
 
@@ -329,24 +374,23 @@ int main(int argc, char** argv)
 	debugPrintWords();
 	*/
 	
-	
 	file = fopen (argv[1],"r");
 	if (!file) 
 		createOutFile(argv[1]);
 	else
 	{
+		
 		char str1[20];
+		
 		printf("Would you like to overrite an existing output file? Y/N ");
 		scanf("%s", (char *)&str1);
+		
 		if (strcmp(str1,"Y")==0 || strcmp(str1,"y")==0)
 		{
 			createOutFile(argv[1]);
 		}
 		else
 			return 0;
-		
-
 	}
-	
 	return 0;
 }
