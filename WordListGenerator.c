@@ -11,14 +11,16 @@ bool isText(char *name)
 /* Create the output file given a character name */
 void createOutFile(char *name)
 {
+	struct node *iter = root;
 	FILE *file;
 	file=fopen(name,"w");
-	struct node *iter = root;
+	
 	while(iter)
 	{
+		struct occ *oIter = iter->occHead;
 		fprintf(file, "%s\n ", iter->token);
 		fprintf(file,"{");
-		struct occ *oIter = iter->occHead;
+		
 		while (oIter)
 		{
 			fprintf(file,"%i ", oIter->repetitions);
@@ -54,9 +56,10 @@ void debugPrintWords()
 	struct node *iter = root;
 	while(iter)
 	{
+		struct occ *oIter = iter->occHead;
 		printf("%s\n ", iter->token);
 		printf("{");
-		struct occ *oIter = iter->occHead;
+		
 		while (oIter)
 		{
 			printf("%i ", oIter->repetitions);
@@ -77,7 +80,7 @@ this includes subfolders and whatnot */
 
 void getAllTxt(char * directory)
 {
-	
+	DIR *file;
 	
 	if (strstr(directory, "/") == NULL && isText(directory))
 	{
@@ -90,7 +93,7 @@ void getAllTxt(char * directory)
 		return;
 	}
 	
-	DIR *file;
+	
 	file = opendir (directory);
 
 	/*If the directory is invalid simply return */
@@ -118,10 +121,9 @@ void getAllTxt(char * directory)
 			
 			char *sl="/";
 			char *dirPart1= malloc(strlen(sl)+strlen(directory)+1);
+			char *dirFinal = malloc(strlen(directoryName)+strlen(dirPart1)+1);
 			strcpy(dirPart1,directory);
 			strcat(dirPart1,sl);
-			
-			char *dirFinal = malloc(strlen(directoryName)+strlen(dirPart1)+1);
 			
 			strcpy(dirFinal, dirPart1);
 			strcat(dirFinal, directoryName);
@@ -151,22 +153,23 @@ void getAllTxt(char * directory)
 				else
 				{
 					#ifdef _WIN32
+						struct directoryList *newDirectory=malloc(sizeof(struct directoryList));
 						while (iter->next!=NULL)
 							iter=iter->next;
 						
-						struct directoryList *newDirectory=malloc(sizeof(struct directoryList));
-						newDirectory->dir=dirFinal;
 						
+						newDirectory->dir=dirFinal;
 						newDirectory->dirName=malloc(PATH_MAX);
 						strncpy(newDirectory->dirName,directoryName, PATH_MAX);
 						newDirectory->next=NULL;
 						iter->next=newDirectory;
 						
 					#else
+						struct directoryList *newDirectory=(struct directoryList *)malloc(sizeof(struct directoryList));
 						while (iter->next!=NULL)
 							iter=iter->next;
 						
-						struct directoryList *newDirectory=(struct directoryList *)malloc(sizeof(struct directoryList));
+						
 						newDirectory->dir=dirFinal;
 						newDirectory->dirName=directoryName;
 						newDirectory->next=NULL;
@@ -312,6 +315,7 @@ void getAllWords()
 
 int main(int argc, char** argv)
 {	
+	FILE *file;
 	if (argc!=3)
 	{
 		printf("You need the correct amount of arguments");
@@ -325,7 +329,7 @@ int main(int argc, char** argv)
 	debugPrintWords();
 	*/
 	
-	FILE *file;
+	
 	file = fopen (argv[1],"r");
 	if (!file) 
 		createOutFile(argv[1]);
@@ -333,7 +337,7 @@ int main(int argc, char** argv)
 	{
 		char str1[20];
 		printf("Would you like to overrite an existing output file? Y/N ");
-		scanf("%s", &str1);
+		scanf("%s", (char *)&str1);
 		if (strcmp(str1,"Y")==0 || strcmp(str1,"y")==0)
 		{
 			createOutFile(argv[1]);
