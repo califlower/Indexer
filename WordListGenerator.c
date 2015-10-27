@@ -20,19 +20,20 @@ void createOutFile(char *name)
 {
 	struct node *iter = root;
 	FILE *file=fopen(name,"w");
-	
+	fprintf(file,"{\"list\"");
+	fprintf(file,"\n");
 	while(iter)
 	{
 		struct occ *oIter = iter->occHead;
-		fprintf(file,"{");
-		fprintf(file, "%s", iter->token);
+		fprintf(file,"	{");
+		fprintf(file, "\"%s\"", iter->token);
 		fprintf(file," : [\n");
 		
 		
 		while (oIter)
 		{
-			fprintf(file,"	{");
-			fprintf(file,"%s", oIter->file);
+			fprintf(file,"		{");
+			fprintf(file,"\"%s\"", oIter->file);
 			fprintf(file,":");
 			fprintf(file,"%i ", oIter->repetitions);
 			fprintf(file,"}");
@@ -42,8 +43,12 @@ void createOutFile(char *name)
 			else
 				fprintf(file,"\n");
 		}
-		fprintf(file,"}]\n");;
+		
 		iter = iter->next;
+		if (iter)
+			fprintf(file,"}],\n");
+		else
+			fprintf(file,"}]\n");;
 		
 	}
 	fclose(file);

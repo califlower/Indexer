@@ -1,5 +1,5 @@
 COMPILER = gcc
-CCFLAGS  = -Wall -ansi -pedantic
+CCFLAGS  = -Wall -g -O3
 all: indexer
 
 WordListGenerator.o: WordListGenerator.c
