@@ -20,7 +20,7 @@ void createOutFile(char *name)
 {
 	struct node *iter = root;
 	FILE *file=fopen(name,"w");
-	fprintf(file,"{\"list\"");
+	fprintf(file,"{\"list\" : [");
 	fprintf(file,"\n");
 	while(iter)
 	{
@@ -46,11 +46,12 @@ void createOutFile(char *name)
 		
 		iter = iter->next;
 		if (iter)
-			fprintf(file,"}],\n");
+			fprintf(file,"	]},\n");
 		else
-			fprintf(file,"}]\n");;
+			fprintf(file,"	]}\n");;
 		
 	}
+	fprintf(file,"]}");
 	fclose(file);
 }
 
