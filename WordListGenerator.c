@@ -162,50 +162,46 @@ but it works well and doesn't seem to cause any issues */
 			{	
 			
 				struct directoryList *iter=dirHead;
-				
-/* Some OS specific stuff that allows me to change things up depending on the OS. If the iterator is null do this. For
-example its the root node */
 				if (!iter)
 				{
+					
 					iter=malloc(sizeof(struct directoryList));
 					iter->dir=dirFinal;
-					
-					#ifdef _WIN32
-						iter->dirName=dirFinal;
-					#else
-						iter->dirName=dirFinal;
-					#endif
-					
+					iter->dirName=malloc(PATH_MAX);
+					strncpy(iter->dirName,directoryName, sizeof(PATH_MAX));
 					iter->next=NULL;
 					dirHead=iter;
 				}
-/* If its not null, go to the end and tack some stuff on. Going to the end preserves the order */
 				else
 				{
 					#ifdef _WIN32
-						struct directoryList *newDirectory=malloc(sizeof(struct directoryList));
 						while (iter->next!=NULL)
 							iter=iter->next;
 						
+						struct directoryList *newDirectory=malloc(sizeof(struct directoryList));
 						newDirectory->dir=dirFinal;
-						newDirectory->dirName=dirFinal;
+						
+						newDirectory->dirName=malloc(PATH_MAX);
+						strncpy(newDirectory->dirName,directoryName, PATH_MAX);
 						newDirectory->next=NULL;
 						iter->next=newDirectory;
 						
 					#else
-						struct directoryList *newDirectory=(struct directoryList *)malloc(sizeof(struct directoryList));
 						while (iter->next!=NULL)
 							iter=iter->next;
 						
+						struct directoryList *newDirectory=(struct directoryList *)malloc(sizeof(struct directoryList));
 						newDirectory->dir=dirFinal;
-						newDirectory->dirName=dirFinal;
+						newDirectory->dirName=malloc(PATH_MAX);
+						strncpy(newDirectory->dirName,directoryName, PATH_MAX);
+					
 						newDirectory->next=NULL;
-						
 						iter->next=newDirectory;
 					#endif
 				}
 		
 			}
+
 			/*RECURSION*/
 			getAllTxt(dirFinal);
 		}
