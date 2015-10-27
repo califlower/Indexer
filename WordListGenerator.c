@@ -105,11 +105,7 @@ void debugPrintWords()
 
 void getAllTxt(char * directory)
 {
-	DIR *file;
-/*
-If the given directory doesn't have any slashes, assume that it's just a file. Probably would work fine without this
-but can't take chances
-*/
+	
 	if (strstr(directory, "/") == NULL && isText(directory))
 	{
 		
@@ -121,12 +117,12 @@ but can't take chances
 		return;
 	}
 	
-	
+	DIR *file;
 	file = opendir (directory);
 
-/*If the directory is invalid simply return */
-	if (!file)
-        	return;
+	/*If the directory is invalid simply return */
+	if (!file) 
+        return;
 
 
 	while (true) 
@@ -135,7 +131,7 @@ but can't take chances
 		char * directoryName;
 		entry = readdir (file);
 	
-/*break the loop if it can't open the file */
+	/*break the loop if it can't open the file */
 		if (!entry)		
 			break;
   
@@ -144,20 +140,20 @@ but can't take chances
 		if (strcmp (directoryName, "..") != 0 && strcmp (directoryName, ".") != 0) 
 		{
 			
-/* This block basically lumps a few strings together so that it can go into subdirectories. Probably not the best way to do things
-but it works well and doesn't seem to cause any issues */
+			/* This block basically lumps a few strings together so that it can go into subdirectories. Probably not the best way to do things
+			but it works well and doesn't seem to cause any issues */
 			
 			char *sl="/";
 			char *dirPart1= malloc(strlen(sl)+strlen(directory)+1);
-			char *dirFinal = malloc(strlen(directoryName)+strlen(dirPart1)+1);
-			
 			strcpy(dirPart1,directory);
 			strcat(dirPart1,sl);
+			
+			char *dirFinal = malloc(strlen(directoryName)+strlen(dirPart1)+1);
 			
 			strcpy(dirFinal, dirPart1);
 			strcat(dirFinal, directoryName);
 			
-/*if its a text file, throw it into the directory linked list */
+			/*if its a text file, throw it into the directory linked list */
 			if (isText(directoryName)==true)
 			{	
 			
@@ -201,7 +197,6 @@ but it works well and doesn't seem to cause any issues */
 				}
 		
 			}
-
 			/*RECURSION*/
 			getAllTxt(dirFinal);
 		}
@@ -209,6 +204,7 @@ but it works well and doesn't seem to cause any issues */
 
 	closedir(file);
 }
+
 
 
 /*********
