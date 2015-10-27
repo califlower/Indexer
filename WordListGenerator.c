@@ -280,7 +280,7 @@ A string is a char array, but a char array is not neccarily a string. Who knew. 
 	
 	iter=root;
 	
-	if (iter==NULL)
+	if (iter==NULL || strcmp(input,root->token)<0)
 	{
 		toInsert->occHead=NULL;
 		toInsert->next=NULL;
@@ -313,6 +313,15 @@ A string is a char array, but a char array is not neccarily a string. Who knew. 
 				toInsert->occHead=insertOcc(toInsert->occHead,file);
 				iter->next=toInsert;
 				return;
+			}
+			else if (strcmp(input, iter->next->token)<0)
+			{
+				toInsert->next=iter->next;
+				iter->next=toInsert;
+				toInsert->occHead=NULL;
+				toInsert->occHead=insertOcc(toInsert->occHead,file);
+				return;
+				
 			}
 			iter=iter->next;
 		}
