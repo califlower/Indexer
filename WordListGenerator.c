@@ -257,7 +257,7 @@ struct occ *insertOcc(struct occ *head, char *file)
 			if (strcmp(iter->file,file)==0)
 			{
 				iter->repetitions++;
-				if (iter->previous!=NULL)
+				if (iter->previous!=NULL && iter->previous->repetitions<iter->repetitions)
 				{
 						char *TempFile=iter->previous->file;
 						int TempRepetitions=iter->previous->repetitions;
