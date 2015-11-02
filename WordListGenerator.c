@@ -170,7 +170,7 @@ void getAllTxt(char * directory)
 					iter=malloc(sizeof(struct directoryList));
 					iter->dir=dirFinal;
 					iter->dirName=malloc(PATH_MAX);
-					strncpy(iter->dirName,directoryName, sizeof(PATH_MAX));
+					strcpy(iter->dirName,directoryName);
 					iter->next=NULL;
 					dirHead=iter;
 				}
@@ -227,6 +227,7 @@ struct occ *insertOcc(struct occ *head, char *file)
 	
 	toInsert->repetitions=1;
 	
+	
 	iter=head;
 	
 	/* if linked list is empty */
@@ -236,6 +237,7 @@ struct occ *insertOcc(struct occ *head, char *file)
 	
 		head=toInsert;
 		head->next=iter;
+		head->previous=NULL;
 		return head;
 	}
 	
@@ -255,11 +257,24 @@ struct occ *insertOcc(struct occ *head, char *file)
 			if (strcmp(iter->file,file)==0)
 			{
 				iter->repetitions++;
+				if (iter->previous!=NULL)
+				{
+						char *TempFile=iter->previous->file;
+						int TempRepetitions=iter->previous->repetitions;
+						
+						iter->previous->file=iter->file;
+						iter->previous->repetitions=iter->repetitions;
+						
+						iter->file=TempFile;
+						iter->repetitions=TempRepetitions;
+				}
+				
 				return head;
 			}				
 			if (iter->next == NULL) 
 			{
 				toInsert->next=NULL;
+				toInsert->previous=NULL;
 				iter->next=toInsert;
 				return head;
 			}

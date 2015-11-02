@@ -20,6 +20,7 @@ struct occ
 	char *file;
 	int repetitions;
 	struct occ *next;
+	struct occ *previous;
 };
 
 /* a list of all the words */
