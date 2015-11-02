@@ -274,7 +274,7 @@ struct occ *insertOcc(struct occ *head, char *file)
 			if (iter->next == NULL) 
 			{
 				toInsert->next=NULL;
-				toInsert->previous=NULL;
+				toInsert->previous=iter;
 				iter->next=toInsert;
 				return head;
 			}
