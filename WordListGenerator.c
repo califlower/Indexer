@@ -368,7 +368,7 @@ void getAllWords()
 /* Only scans alphanumeric stuff. Takes care of parsing in one nice swoop */
 		while(fscanf(file, "%*[^A-Za-z0-9]"), fscanf(file, "%199[a-zA-Z0-9]", string) > 0)
 		{
-			insert(string,iter->dirName);
+			insert(string,iter->dir);
 		}	
 		fclose(file);
 		
@@ -385,6 +385,7 @@ void getAllWords()
 int main(int argc, char** argv)
 {	
 	FILE *file;
+	
 	if (argc!=3)
 	{
 		printf("You have inputted the wrong amount of arguments. You need to have 3 arguments (this includes the program name itself");
@@ -392,6 +393,7 @@ int main(int argc, char** argv)
 	}
 
 	getAllTxt(argv[2]);
+	
 	getAllWords();
 	/* Comment out debug commands
 	debugPrintFiles();
