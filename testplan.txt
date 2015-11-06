@@ -7,8 +7,9 @@ TEST PLAN: Our program has worked for the following test cases which include ver
 For Example: (ON MY LAPTOP)
 /Users/Saif/a.out "/Users/Saif/Desktop/testcases/testinthis.txt" "/Users/Saif/Desktop/testcases/comb/"
 
-Properly Define In First Quotations "Your source file path" 
-Properly Define in Second Quotations "Your destination directory"
+Properly Define In First Quotations "Your Destination and File Output Path" 
+Properly Define in Second Quotations "Your Source Directory"
+*MAKE SURE TO GET THESE CORRECTLY OTHERWISE PROGRAM WILL NOT WORK*
 
 (Files and Directories are included inside the Test Case folder which is included with this program) 
 
@@ -16,6 +17,5 @@ Test Case 1: Reading a file from a directory with nothing else in the directory 
 Test Case 2: Reading a file from a directory with other files in the directory
 Test Case 3: Reading a file from a directory with other directories in it
 Test Case 4: Reading a file from a directory with another directory which has the same file name in that directory
-Test Case 5: Reading a very large file
-Test Case 6: Trying to read a file which does not exist
+Test Case 5: Trying to read a file which does not exist
 
