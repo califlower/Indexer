@@ -1,8 +1,16 @@
-A file called testplan.txt that contains a test plan for your indexer. You should include the
-example files and/or directories that you test your indexer on but keep these from being too
-large, please. (We might test your program with a very large data set though so don’t skip
-testing your program for scalability. In your test plan, you should discuss the larger scale
-testing and the results, but you can skip including the data set).
+Test Cases for Index by Saif Saiyed and Cal Gilan:
+
+TEST PLAN: Our program has worked for the following test cases which include very large text files (For our testing we used several text files but our main testing file is a file called big.txt which is included with our program) 
+
+***To use our program properly, YOU MUST properly define the source path and destination directory.***
+
+For Example: (ON MY LAPTOP)
+/Users/Saif/a.out "/Users/Saif/Desktop/testcases/testinthis.txt" "/Users/Saif/Desktop/testcases/comb/"
+
+Properly Define In First Quotations "Your source file path" 
+Properly Define in Second Quotations "Your destination directory"
+
+(Files and Directories are included inside the Test Case folder which is included with this program) 
 
 Test Case 1: Reading a file from a directory with nothing else in the directory besides the file
 Test Case 2: Reading a file from a directory with other files in the directory
