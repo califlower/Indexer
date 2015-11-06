@@ -1,0 +1,13 @@
+A file called testplan.txt that contains a test plan for your indexer. You should include the
+example files and/or directories that you test your indexer on but keep these from being too
+large, please. (We might test your program with a very large data set though so don’t skip
+testing your program for scalability. In your test plan, you should discuss the larger scale
+testing and the results, but you can skip including the data set).
+
+Test Case 1: Reading a file from a directory with nothing else in the directory besides the file
+Test Case 2: Reading a file from a directory with other files in the directory
+Test Case 3: Reading a file from a directory with other directories in it
+Test Case 4: Reading a file from a directory with another directory which has the same file name in that directory
+Test Case 5: Reading a very large file
+Test Case 6: Trying to read a file which does not exist
+
