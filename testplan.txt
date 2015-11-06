@@ -10,6 +10,8 @@ For Example: (ON MY LAPTOP)
 Properly Define In First Quotations "Your Destination and File Output Path" 
 Properly Define in Second Quotations "Your Source Directory"
 *MAKE SURE TO GET THESE CORRECTLY OTHERWISE PROGRAM WILL NOT WORK*
+****Scanning a single file will produce a list with just the text file name, but scanning a directory will give the full path name
+of all text files. This is done to avoid duplicate file name confusion*****
 
 (Files and Directories are included inside the Test Case folder which is included with this program) 
 
