@@ -33,6 +33,14 @@ void createOutFile(char *name)
 		while (oIter)
 		{
 			fprintf(file,"		{");
+			
+			int i=0;
+			while(oIter->file[i]) 
+   			{
+      				putchar(tolower(oIter->file[i]));
+      				i++;
+   			}
+			
 			fprintf(file,"\"%s\"", oIter->file);
 			fprintf(file,":");
 			fprintf(file,"%i ", oIter->repetitions);
