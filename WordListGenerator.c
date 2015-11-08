@@ -34,12 +34,6 @@ void createOutFile(char *name)
 		{
 			fprintf(file,"		{");
 			
-			int i=0;
-			while(oIter->file[i]) 
-   			{
-      				putchar(tolower(oIter->file[i]));
-      				i++;
-   			}
 			
 			fprintf(file,"\"%s\"", oIter->file);
 			fprintf(file,":");
@@ -376,6 +370,11 @@ void getAllWords()
 /* Only scans alphanumeric stuff. Takes care of parsing in one nice swoop */
 		while(fscanf(file, "%*[^A-Za-z0-9]"), fscanf(file, "%199[a-zA-Z0-9]", string) > 0)
 		{
+			
+			for(int i = 0; string[i]; i++)
+			{
+				string[i] = tolower(string[i]);
+			}
 			insert(string,iter->dir);
 		}	
 		fclose(file);
